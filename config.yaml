@@ -1,0 +1,30 @@
+# All parameters possible to override by env varivable with prefix DATAMON_
+db:
+  verticadb:
+    type: vertica # type of database mysql|postgres|vertica|clickhouse
+    user: user # might be blank, to override set env variable DATAMON_DB_VERTICADB_USER
+    pass: password
+    host: vertica.host.env
+    port: 5433
+    db: dbname
+  postgresdb:
+    type: postgres
+    user: user
+    pass: password
+    host: postgres.host.com
+    port: 5432
+    db: dbname
+
+checks:
+  somepgcheck: # check name also a result metric name
+    checktype: diff # type of check diff|compare
+    interval: 60 # interval in minutes before next check
+    src: postgresdb
+    dst: verticadb
+    query: # srcddl and dstddl files has priority in case of both query and file values exists
+      # SQL query example
+      src: "select column_3 as col3 from test_table where id = 1;"
+      dst: "select column_3 as col3 from test_table where id = 2;"
+      # SQL query from file located in ddl/ dir
+      srcddl: "src_example.sql"
+      dstddl: "dst_example.sql"
